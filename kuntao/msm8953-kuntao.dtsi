@@ -14,6 +14,24 @@
  */
 
 / {
+	firmware: firmware {
+		android {
+			fstab {
+				system {
+					compatible = "android,system";
+					dev = "/dev/block/platform/soc/7824900.sdhci/by-name/system";
+					type = "ext4";
+					mnt_flags = "ro,barrier=1,discard";
+					fsmgr_flags = "wait,verify";
+					status = "ok";
+				};
+				vendor {
+					dev = "/dev/block/platform/soc/7824900.sdhci/by-name/preload";
+				};
+			};
+		};
+	};
+
 	reserved-memory {
 		other_ext_mem: other_ext_region@0 {
 			reg = <0x0 0x84a00000 0x0 0x1e00000>;
@@ -32,24 +50,6 @@
 
 	aliases {
 		i2c4 = &i2c_4;
-	};
-};
-
-&firmware {
-	android {
-		fstab {
-			system {
-				compatible = "android,system";
-				dev = "/dev/block/platform/soc/7824900.sdhci/by-name/system";
-				type = "ext4";
-				mnt_flags = "ro,barrier=1,discard";
-				fsmgr_flags = "wait,verify";
-				status = "ok";
-			};
-			vendor {
-				dev = "/dev/block/platform/soc/7824900.sdhci/by-name/preload";
-			};
-		};
 	};
 };
 
@@ -109,6 +109,32 @@
 		dma-names = "tx", "rx";
 	};
 
+	usb3: ssusb@7000000{
+		qcom,usbid-gpio = <&tlmm 62 0>;
+		pinctrl-names = "usbid_default", "usbid_deactive";
+		pinctrl-0 = <&usb_id_active>;
+		pinctrl-1 = <&usb_id_deactive>;
+		vbus_dwc3-supply = <&smb1351_otg_supply>;
+
+		dwc3@7000000 {
+			maximum-speed = "high-speed";
+		};
+	};
+
+	qusb_phy: qusb@79000 {
+		qcom,qusb-phy-init-seq = <0xF8 0x80
+					0x6F 0x84
+					0x83 0x88
+					0xC7 0x8C
+					0x14 0x9C
+					0x30 0x08
+					0x79 0x0C
+					0x21 0x10
+					0x03 0x90
+					0x9F 0x1C
+					0x00 0x18>;
+	};
+
 	ramoops {
 		compatible = "ramoops";
 		status = "ok";
@@ -123,30 +149,4 @@
 		android,ramoops-dump-oops = <0x1>;
 		linux,contiguous-region = <&ramoops_mem>;
 	};
-};
-
-&usb3 {
-	qcom,usbid-gpio = <&tlmm 62 0>;
-	pinctrl-names = "usbid_default", "usbid_deactive";
-	pinctrl-0 = <&usb_id_active>;
-	pinctrl-1 = <&usb_id_deactive>;
-	vbus_dwc3-supply = <&smb1351_otg_supply>;
-
-	dwc3@7000000 {
-		maximum-speed = "high-speed";
-	};
-};
-
-&qusb_phy {
-	qcom,qusb-phy-init-seq = <0xF8 0x80
-				0x6F 0x84
-				0x83 0x88
-				0xC7 0x8C
-				0x14 0x9C
-				0x30 0x08
-				0x79 0x0C
-				0x21 0x10
-				0x03 0x90
-				0x9F 0x1C
-				0x00 0x18>;
 };
