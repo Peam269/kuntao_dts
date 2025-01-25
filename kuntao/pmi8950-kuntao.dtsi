@@ -13,24 +13,24 @@
 &spmi_bus {
 	qcom,pmi8950@2 {
 		pmi8950_mpps: mpps {
-			mpp@a000 {
-				/* Host detect */
-				status = "ok";
-				qcom,mode = <4>; /* AIN input */
-				qcom,ain-route = <0>; /* AMUX 5 */
-				qcom,master-en = <1>;
-				qcom,src-sel = <0>; /* Function constant */
-			};
+			//mpp@a000 {
+			//	/* Host detect */
+			//	status = "ok";
+			//	qcom,mode = <4>; /* AIN input */
+			//	qcom,ain-route = <0>; /* AMUX 5 */
+			//	qcom,master-en = <1>;
+			//	qcom,src-sel = <0>; /* Function constant */
+			//};
 
-			mpp@a200 {
-				qcom,mode = <1>;		/* Digital output */
-				qcom,output-type = <0>;		/* CMOS logic */
-				qcom,vin-sel = <0>;
-				qcom,src-sel = <5>;		/* DTEST2 */
-				qcom,master-en = <1>;		/* Enable GPIO */
-				qcom,invert = <0>;
-				status = "okay";
-			};
+			//mpp@a200 {
+			//	qcom,mode = <1>;		/* Digital output */
+			//	qcom,output-type = <0>;		/* CMOS logic */
+			//	qcom,vin-sel = <0>;
+			//	qcom,src-sel = <5>;		/* DTEST2 */
+			//	qcom,master-en = <1>;		/* Enable GPIO */
+			//	qcom,invert = <0>;
+			//	status = "okay";
+			//};
 		};
 
 		qcom,leds@a100 {
@@ -41,40 +41,31 @@
 	qcom,pmi8950@3 {
 		labibb: qpnp-labibb-regulator {
 			status = "ok";
-			qpnp,qpnp-labibb-mode = "amoled";
-			qpnp,swire-control;
+			qcom,qpnp-labibb-mode = "amoled";
+			qcom,swire-control;
 		};
 
 		wled: qcom,leds@d800 {
 			qcom,disp-type-amoled;
-			qcom,switch-freq-khz = <800>;
 			qcom,loop-ea-gm = <1>;
 			qcom,vref-psm-mv = <550>;
 			qcom,ovp-mv = <31000>;
 			qcom,lcd-psm-ctrl;
-			qcom,cons-sync-write-delay-us = <1000>;
 		};
 
 		flash_led: qcom,leds@d300 {
-			compatible = "qcom,qpnp-flash-led";
-			reg = <0xd300 0x100>;
 			pinctrl-names = "flash_led_enable", "flash_led_disable";
 			pinctrl-0 = <&rear_flash_led_enable>;
 			pinctrl-1 = <&rear_flash_led_disable>;
-			qcom,follow-otst2-rb-disabled;
+		};
+
+		pmi_haptic: qcom,haptics@c000 {
+			qcom,play-mode = "buffer";
+			qcom,wave-play-rate-us = <4263>;
+			qcom,vmax-mv = <3200>;
+			qcom,ilim-ma = <100>;
+			qcom,brake-pattern = [03 02 00 00];
+			qcom,wave-samples = [5c 5c 5c 5c 5c 5c 5c 5c];
 		};
 	};
-};
-
-&ibb_regulator {
-	qcom,qpnp-ibb-discharge-resistor = <32>;
-};
-
-&pmi_haptic {
-	qcom,play-mode = "buffer";
-	qcom,wave-play-rate-us = <4263>;
-	qcom,vmax-mv = <3200>;
-	qcom,ilim-ma = <100>;
-	qcom,brake-pattern = [03 02 00 00];
-	qcom,wave-samples = [5c 5c 5c 5c 5c 5c 5c 5c];
 };

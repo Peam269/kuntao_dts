@@ -1,6 +1,4 @@
 /*
- * Copyright (c) 2015-2016, The Linux Foundation. All rights reserved.
- * Copyright (c) 2015, Motorola Mobility Inc. All rights reserved.
  * Copyright (c) 2015-2018, The Linux Foundation. All rights reserved.
  *
  * This program is free software; you can redistribute it and/or modify
@@ -16,6 +14,7 @@
 / {
 	firmware: firmware {
 		android {
+			/delete-node/ vbmeta;
 			fstab {
 				system {
 					compatible = "android,system";
@@ -27,6 +26,7 @@
 				};
 				vendor {
 					dev = "/dev/block/platform/soc/7824900.sdhci/by-name/preload";
+					fsmgr_flags = "wait,verify";
 				};
 			};
 		};
@@ -82,6 +82,7 @@
 		clock-names = "core_clk_src", "core_clk",
 				"iface_clk", "bus_clk";
 		qcom,ce-opp-freq = <100000000>;
+		status = "okay";
 	};
 
 	i2c_4: i2c@78b8000 { /* BLSP1 QUP4 */
@@ -110,6 +111,7 @@
 	};
 
 	usb3: ssusb@7000000{
+		qcom,connector-type-uAB;
 		qcom,usbid-gpio = <&tlmm 62 0>;
 		pinctrl-names = "usbid_default", "usbid_deactive";
 		pinctrl-0 = <&usb_id_active>;
@@ -137,16 +139,14 @@
 
 	ramoops {
 		compatible = "ramoops";
-		status = "ok";
-
-		/* This is tacked at the end of wcnss_fw_region@0 */
-		android,ramoops-buffer-start = <0x8ee00000>;
-		android,ramoops-buffer-size = <0x80000>;
-		android,ramoops-console-size = <0x40000>;
-		android,ramoops-pmsg-size = <0x20000>;
-		android,ramoops-record-size = <0x5000>;
-		android,ramoops-ftrace-size = <0x15000>;
-		android,ramoops-dump-oops = <0x1>;
-		linux,contiguous-region = <&ramoops_mem>;
+		memory-region = <&ramoops_mem>;
+		record-size = <0x5000>;
+		console-size = <0x40000>;
+		pmsg-size = <0x20000>;
+		ftrace-size = <0x15000>;
 	};
+};
+
+&apps_iommu {
+	qcom,no-aarch64;
 };
