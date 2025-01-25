@@ -355,16 +355,6 @@
 	};
 };
 
-&thermal_zones {
-	case-therm-step {
-		status = "disabled";
-	};
-
-	quiet-therm-step {
-		status = "disabled";
-	};
-};
-
 / {
 	mtp_batterydata: qcom,battery-data {
 		qcom,batt-id-range-pct = <86>;
@@ -387,7 +377,7 @@
 	};
 };
 
-&qpnp_fg {
+&pmi8950_fg {
 	qcom,battery-data = <&mtp_batterydata>;
 	//qcom,fg-vadc = <&pmi8950_vadc>;
 	//qcom,fg-delta-soc = <1>;
@@ -397,6 +387,6 @@
 	qcom,hold-soc-while-full;
 };
 
-&qpnp_smbcharger {
+&pmi8950_charger {
 	status = "disabled";
 };
