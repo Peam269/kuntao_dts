@@ -15,7 +15,7 @@
 
 #include "msm8953.dtsi"
 #include "msm-pmi8950.dtsi"
-#include "kuntao/msm8953-kuntao.dtsi"
+#include "kuntao/msm8953-mtp-kuntao.dtsi"
 
 / {
 	model = "Kuntao p0";

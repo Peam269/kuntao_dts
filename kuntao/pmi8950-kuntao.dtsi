@@ -1,0 +1,83 @@
+/* Copyright (c) 2015-2018, The Linux Foundation. All rights reserved.
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License version 2 and
+ * only version 2 as published by the Free Software Foundation.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ */
+
+&spmi_bus {
+	qcom,pmi8950@3 {
+		qcom,leds@d800 {
+			qcom,disp-type-amoled;
+			qcom,switch-freq-khz = <800>;
+			qcom,loop-ea-gm = <1>;
+			qcom,vref-psm-mv = <550>;
+			qcom,ovp-mv = <31000>;
+			qcom,enable-amoled-pulse-skipping;
+		};
+	};
+
+	qcom,pmi8950@2 {
+		qcom,leds@a100 {
+			status = "disabled";
+		};
+	};
+};
+
+&pmi8950_mpps {
+	mpp@a000 {
+		/* Host detect */
+		status = "ok";
+		qcom,mode = <4>; /* AIN input */
+		qcom,ain-route = <0>; /* AMUX 5 */
+		qcom,master-en = <1>;
+		qcom,src-sel = <0>; /* Function constant */
+	};
+
+	mpp@a200 {
+		qcom,mode = <1>;		/* Digital output */
+		qcom,output-type = <0>;		/* CMOS logic */
+		qcom,vin-sel = <0>;
+		qcom,src-sel = <5>;		/* DTEST2 */
+		qcom,master-en = <1>;		/* Enable GPIO */
+		qcom,invert = <0>;
+		status = "okay";
+	};
+};
+
+&labibb {
+	status = "ok";
+	qpnp,qpnp-labibb-mode = "amoled";
+	qpnp,swire-control;
+};
+
+&ibb_regulator {
+	qcom,qpnp-ibb-discharge-resistor = <32>;
+};
+
+&wled {
+	qcom,cons-sync-write-delay-us = <1000>;
+};
+
+&flash_led {
+	compatible = "qcom,qpnp-flash-led";
+	reg = <0xd300 0x100>;
+	pinctrl-names = "flash_led_enable", "flash_led_disable";
+	pinctrl-0 = <&rear_flash_led_enable>;
+	pinctrl-1 = <&rear_flash_led_disable>;
+	qcom,follow-otst2-rb-disabled;
+};
+
+&pmi_haptic {
+	qcom,play-mode = "buffer";
+	qcom,wave-play-rate-us = <4263>;
+	qcom,vmax-mv = <3200>;
+	qcom,ilim-ma = <100>;
+	qcom,brake-pattern = [03 02 00 00];
+	qcom,wave-samples = [5c 5c 5c 5c 5c 5c 5c 5c];
+};
